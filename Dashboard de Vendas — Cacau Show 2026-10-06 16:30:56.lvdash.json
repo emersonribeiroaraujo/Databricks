@@ -1,0 +1,248 @@
+{
+  "datasets": [
+    {
+      "name": "fato_vendas",
+      "displayName": "Faturamento Cacau Show",
+      "config": {
+        "version": "1.1",
+        "source": "cacaushow.custos.fato_vendas",
+        "dimensions": [
+          {
+            "name": "data_venda",
+            "expr": "data_venda",
+            "displayName": "Data da Venda",
+            "format": {
+              "type": "date",
+              "dateFormat": "locale_short_month"
+            }
+          },
+          {
+            "name": "canal",
+            "expr": "canal",
+            "displayName": "Canal de Venda"
+          }
+        ],
+        "measures": [
+          {
+            "name": "faturamento",
+            "expr": "SUM(valor_liquido)",
+            "displayName": "Faturamento",
+            "format": {
+              "type": "currency",
+              "currencyCode": "BRL",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "5bf8d864",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "counter_faturamento",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fato_vendas",
+                  "fields": [
+                    {
+                      "name": "measure(faturamento)",
+                      "expression": "MEASURE(`faturamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Faturamento Total"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(faturamento)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "linha_faturamento_mes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fato_vendas",
+                  "fields": [
+                    {
+                      "name": "monthly(data_venda)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `data_venda`)"
+                    },
+                    {
+                      "name": "measure(faturamento)",
+                      "expression": "MEASURE(`faturamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Faturamento por Mês"
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(data_venda)",
+                  "displayName": "Mês",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(faturamento)",
+                  "displayName": "faturamento",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "barras_faturamento_canal",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fato_vendas",
+                  "fields": [
+                    {
+                      "name": "canal",
+                      "expression": "`canal`"
+                    },
+                    {
+                      "name": "measure(faturamento)",
+                      "expression": "MEASURE(`faturamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Faturamento por Canal",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "canal",
+                  "displayName": "canal",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(faturamento)",
+                  "displayName": "faturamento",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "canal",
+                  "displayName": "canal",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Loja Física",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 4
+                        }
+                      },
+                      {
+                        "value": "E-commerce",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED",
+      "visualizationColorMappings": [
+        {
+          "value": "E-commerce",
+          "color": "#077A9D"
+        }
+      ]
+    },
+    "applyModeEnabled": false
+  }
+}
